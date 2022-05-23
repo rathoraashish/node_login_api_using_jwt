@@ -20,15 +20,14 @@ router.post('/addUser', async (req,res)=>{
         const data = await User.addUser(req)
         console.log("data:::response)__", data);
         res.send({
-          "status":200,
-          "message":"User inserted successfuly",
+          "status":"success",
           "data":data
         })
         //return responseMessage(null, data) // User in-case of lambda function
       } catch (err) {
         console.log("Error:::::::))", err);
         res.send({
-          "status":400,
+          "status":"failed",
           "message":"failed to insert user",
           "data":err
         })
