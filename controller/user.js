@@ -1,5 +1,7 @@
 const con = require('../config/dbconfig');
 const bcrypt = require('bcrypt');
+const {sign} = require('jsonwebtoken');
+const res = require('express/lib/response');
 
 //---------Add new user api-----------
 
@@ -53,4 +55,34 @@ exports.getUserById = async (id)=>{
     })
     // console.log("datataaaa", data);
     return data
+}
+
+exports.userLogin = async (req)=>{
+    let response;
+    let userdata = req.body;
+    let query = `select * from registration where email=?`;
+    const data = await con.query(query,[userdata.email]).then(async (obj) => {
+        console.log("User found", obj[0]);
+        let result = await bcrypt.compareSync(userdata.password,obj[0][0].password);
+        if(result){
+            const jsontoken = sign({result:obj[0].id}, "Ashish#123?",{
+                expiresIn:"1h"
+            });
+            console.log("JSON TOKEN__________",jsontoken)
+            response = {
+                message:"Login success",
+                jsontoken:jsontoken
+            }
+        }else{
+            response = {
+                message:"Please check email or password"
+            }
+        }
+        return response;
+    }).catch(err => {
+        console.log("error", err);
+        return err
+    })
+    return data
+    // console.log("datataaaa", data);
 }

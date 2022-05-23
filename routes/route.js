@@ -76,4 +76,23 @@ router.get('/users/:id', async (req,res)=>{
       }
 })
 
+router.post('/login', async (req,res)=>{
+  try {
+      // console.log("Data from postman",req.body);
+      const data = await User.userLogin(req)
+      console.log("data:::response)__", data);
+      res.send({
+        "status":200,
+        "data":data
+      })
+    } catch (err) {
+      console.log("Error:::::::))", err);
+      res.send({
+        "status":400,
+        "message":"Login failed",
+        "data":err
+      })
+    }
+})
+
 module.exports = router;
