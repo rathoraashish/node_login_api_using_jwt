@@ -7,17 +7,26 @@ exports.addUser = async (req)=>{
     const userdata = req.body;
     const salt = bcrypt.genSaltSync(10);
     userdata.password = bcrypt.hashSync(userdata.password,salt);
-    console.log("addUser controller.......",userdata);
-    let query = `insert into registration(full_name,email,password,mobile) value(?,?,?,?)`;
-    const data = await con.query(query,[userdata.name,userdata.email,userdata.password,userdata.mobile]).then(obj => {
-        console.log("1 record inserted", obj[0]);
-        return obj[0]
-    }).catch(err => {
-        console.log("error", err);
-        return err
-    })
+    let isUserExist = await con.query(`select * from registration where email='${userdata.email}'`);
+    console.log("length of array:",isUserExist[0]);
+    if(isUserExist[0].length <= 0){
+        console.log("addUser controller.......",userdata);
+        let query = `insert into registration(full_name,email,password,mobile) value(?,?,?,?)`;
+        const data = await con.query(query,[userdata.name,userdata.email,userdata.password,userdata.mobile]).then(obj => {
+            console.log("1 record inserted", obj[0]);
+            return obj[0]
+        }).catch(err => {
+            console.log("error", err);
+            return err
+        })
+        return data;
+    }else{
+        result = {
+            message:"user already exsists"
+        }
+        return result
+    }
     // console.log("datataaaa", data);
-    return data
 }
 
 exports.allUsers = async ()=>{
