@@ -32,3 +32,16 @@ exports.allUsers = async ()=>{
     // console.log("datataaaa", data);
     return data
 }
+
+exports.getUserById = async (id)=>{
+    let query = `select id,full_name,email,mobile from registration where id=?`;
+    const data = await con.query(query,[id]).then(obj => {
+        console.log("User found", obj[0]);
+        return obj[0]
+    }).catch(err => {
+        console.log("error", err);
+        return err
+    })
+    // console.log("datataaaa", data);
+    return data
+}

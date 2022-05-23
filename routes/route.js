@@ -56,4 +56,25 @@ router.get('/users', async (req,res)=>{
       }
 })
 
+router.get('/users/:id', async (req,res)=>{
+    try {
+        var id = req.params.id;
+        // console.log("Data from postman",id);
+        const data = await User.getUserById(id)
+        console.log("data:::response)__", data);
+        res.send({
+          "status":200,
+          "message":"User fetched using id",
+          "data":data
+        })
+      } catch (err) {
+        console.log("Error:::::::))", err);
+        res.send({
+          "status":400,
+          "message":"Unable to fetch user",
+          "data":err
+        })
+      }
+})
+
 module.exports = router;
