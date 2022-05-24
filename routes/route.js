@@ -3,6 +3,7 @@ const app = express();
 var router = express.Router();
 const User = require('../controller/user');
 const bodyParser = require('body-parser');
+const {validateToken} = require('../auth/token_validation')
 
 // support parsing of application/json type post data
 router.use(bodyParser.json());
@@ -14,7 +15,7 @@ router.post('/',(req,res)=>{
     res.send(req.body)
 })
 
-router.post('/addUser', async (req,res)=>{
+router.post('/addUser',validateToken, async (req,res)=>{
     try {
         // console.log("Data from postman",req.body);
         const data = await User.addUser(req)
@@ -35,7 +36,7 @@ router.post('/addUser', async (req,res)=>{
       }
 })
 
-router.get('/users', async (req,res)=>{
+router.get('/users',validateToken, async (req,res)=>{
     try {
         // console.log("Data from postman",req.body);
         const data = await User.allUsers()
@@ -55,7 +56,7 @@ router.get('/users', async (req,res)=>{
       }
 })
 
-router.get('/users/:id', async (req,res)=>{
+router.get('/users/:id',validateToken, async (req,res)=>{
     try {
         var id = req.params.id;
         // console.log("Data from postman",id);
