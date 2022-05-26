@@ -44,6 +44,20 @@ exports.allUsers = async ()=>{
     return data
 }
 
+exports.deleteUser = async (req)=>{
+    console.log("This is a id from middleware",req.body.id)
+    let query = `delete from registration where id=${req.body.id}`;
+    const data = await con.query(query).then(obj => {
+        console.log("User deleted successfully", obj[0]);
+        return obj[0]
+    }).catch(err => {
+        console.log("error", err);
+        return err
+    })
+    // console.log("datataaaa", data);
+    return data
+}
+
 exports.getUserById = async (id)=>{
     let query = `select id,full_name,email,mobile from registration where id=?`;
     const data = await con.query(query,[id]).then(obj => {
@@ -65,7 +79,7 @@ exports.userLogin = async (req)=>{
         console.log("User found", obj[0]);
         let result = await bcrypt.compareSync(userdata.password,obj[0][0].password);
         if(result){
-            const jsontoken = sign({result:obj[0].id}, "Ashish#123?",{
+            const jsontoken = sign({result:obj[0][0]}, "Ashish#123?",{
                 expiresIn:"1h"
             });
             console.log("JSON TOKEN__________",jsontoken)

@@ -15,7 +15,7 @@ router.post('/',(req,res)=>{
     res.send(req.body)
 })
 
-router.post('/addUser',validateToken, async (req,res)=>{
+router.post('/addUser', async (req,res)=>{
     try {
         // console.log("Data from postman",req.body);
         const data = await User.addUser(req)
@@ -91,6 +91,25 @@ router.post('/login', async (req,res)=>{
       res.send({
         "status":400,
         "message":"Login failed",
+        "data":err
+      })
+    }
+})
+
+router.delete('/deleteUser',validateToken, async (req,res)=>{
+  try {
+      // console.log("Data from postman",req.body);
+      const data = await User.deleteUser(req)
+      console.log("data:::response)__", data);
+      res.send({
+        "status":200,
+        "data":data
+      })
+    } catch (err) {
+      console.log("Error:::::::))", err);
+      res.send({
+        "status":400,
+        "message":"Unable to delete user",
         "data":err
       })
     }
